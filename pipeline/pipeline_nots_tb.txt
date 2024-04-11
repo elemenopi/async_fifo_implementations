@@ -1,0 +1,49 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity pipeline_tb is
+end pipeline_tb;
+
+architecture tb_arch of pipeline_tb is
+    constant CLK_PERIOD : time := 10 ns; -- Clock period (10 ns)
+
+    signal clk : std_logic := '0'; -- Clock signal
+    signal input_signal : std_logic_vector(3 downto 0) := (others => '0'); -- Input signal
+    signal output_signal : std_logic_vector(3 downto 0); -- Output signal
+
+    component pipeline is
+        Port (
+            clk : in STD_LOGIC;
+            input : in STD_LOGIC_VECTOR(3 downto 0);
+            output : out STD_LOGIC_VECTOR(3 downto 0)
+        );
+    end component;
+begin
+    -- Instantiate the pipeline entity
+    dut : pipeline
+        port map (
+            clk => clk,
+            input => input_signal,
+            output => output_signal
+        );
+
+    -- Clock process
+    clk_process : process
+    begin
+        while now < 100 ns loop -- Run for 100 ns
+            clk <= not clk; -- Toggle clock
+            wait for CLK_PERIOD / 2;
+        end loop;
+        wait; -- Wait forever
+    end process;
+
+    -- Stimulus process
+    stimulus_process : process
+    begin
+        wait for 20 ns; -- Wait before changing input
+        input_signal <= "1100"; -- Set input to some value
+        wait for 50 ns; -- Hold input
+        input_signal <= "0011"; -- Change input
+        wait; -- Wait forever
+    end process;
+end architecture tb_arch;

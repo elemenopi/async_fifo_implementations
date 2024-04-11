@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity fourbitmodule is
+    Port (
+        Input : in std_logic_vector(3 downto 0);
+        Output : out std_logic_vector(3 downto 0)
+    );
+    signal Temp_1, Temp_2 : std_logic;
+end fourbitmodule;
+
+architecture Behavioral of fourbitmodule is
+ component comperator
+        Port (
+            A, B : in  std_logic;
+            Max, Min : out std_logic
+        );
+    end component;
+begin
+	Comperator_1 : comperator
+    	port map (
+        	A => Input(0),
+            B => Input(2),
+            Max => Temp_2,
+            Min => Output(0)
+        );
+    Comperator_2 : comperator
+    	port map (
+        	A => Input(1),
+            B => Input(3),
+            Max => Output(3),
+            Min => Temp_1
+        );
+   	Comperator_3 : comperator
+    	port map (
+        	A => Temp_1,
+            B => Temp_2,
+            Max => Output(1),
+            Min => Output(2)
+        );
+end Behavioral;

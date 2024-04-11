@@ -1,0 +1,60 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity ParallelInParallelOutRegister_tb is
+end ParallelInParallelOutRegister_tb;
+
+architecture Behavioral of ParallelInParallelOutRegister_tb is
+    component ParallelInParallelOutRegister
+        Port (
+            clk : in STD_LOGIC;
+            reset : in STD_LOGIC;
+            enable : in STD_LOGIC;
+            data_in : in STD_LOGIC_VECTOR(7 downto 0);
+            parallel_out : out STD_LOGIC_VECTOR(7 downto 0)
+        );
+    end component;
+
+    signal clk : STD_LOGIC := '0';
+    signal reset : STD_LOGIC := '0';
+    signal enable : STD_LOGIC := '0';
+    signal data_in : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+    signal parallel_out : STD_LOGIC_VECTOR(7 downto 0);
+
+    constant clock_period : time := 50 ns;  -- Adjust as necessary
+
+begin
+
+    dut: ParallelInParallelOutRegister port map (
+        clk => clk,
+        reset => reset,
+        enable => enable,
+        data_in => data_in,
+        parallel_out => parallel_out
+    );
+
+    -- Clock process
+    clk_process: process
+    begin
+        while now < 1000 ns loop  -- Simulate for 1000 ns
+            clk <= not clk;
+            wait for clock_period / 2;
+        end loop;
+        wait;
+    end process clk_process;
+
+    -- Stimulus process
+    stimulus_process: process
+    begin
+        -- Test Case 1: No data input
+        wait for 10 ns;
+        data_in <= "10101010";
+        wait for 10 ns;
+        enable <= '1';
+        wait for 10 ns;
+        -- Add more test cases as needed
+        
+        wait;
+    end process stimulus_process;
+
+end Behavioral;

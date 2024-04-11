@@ -1,0 +1,80 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity memory_array_tb is
+end memory_array_tb;
+
+architecture behavior of memory_array_tb is
+    -- Component Declaration for the Unit Under Test (UUT)
+    component memory_array
+    port(
+         data_out : out std_logic_vector(7 downto 0);
+         rptr : in std_logic_vector(4 downto 0);
+         clk : in std_logic;
+         fifo_we : in std_logic;
+         wptr : in std_logic_vector(4 downto 0);
+         data_in : in std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    --Inputs
+    signal clk : std_logic := '0';
+    signal rptr : std_logic_vector(4 downto 0) := (others => '0');
+    signal fifo_we : std_logic := '0';
+    signal wptr : std_logic_vector(4 downto 0) := (others => '0');
+    signal data_in : std_logic_vector(7 downto 0) := (others => '0');
+
+    --Outputs
+    signal data_out : std_logic_vector(7 downto 0);
+
+    -- Clock period definitions
+    constant clk_period : time := 10 ns;
+
+begin
+
+    -- Instantiate the Unit Under Test (UUT)
+    uut: memory_array port map (
+        data_out => data_out,
+        rptr => rptr,
+        clk => clk,
+        fifo_we => fifo_we,
+        wptr => wptr,
+        data_in => data_in
+    );
+
+
+    -- Clock process to generate the clock
+    clk_process: process
+    begin
+        for i in 1 to 10 loop  -- Simulate for 1000 clock cycles
+            clk <= not clk;
+            wait for clk_period / 2;
+        end loop;
+        wait;
+    end process clk_process;
+
+    -- Stimulus process
+    stim_proc: process
+    begin
+        -- Initialize inputs
+        fifo_we <= '1';  -- Set FIFO write enable to write some data
+        wptr <= "00001";  -- Set write pointer to address 1
+        data_in <= "01010101";  -- Set data input
+
+        wait for 10 ns;
+
+        -- Read from different addresses
+        rptr <= "00000";  -- Read from address 0
+        wait for clk_period;
+        rptr <= "00001";  -- Read from address 1
+        wait for clk_period;
+        rptr <= "00010";  -- Read from address 2
+        wait for clk_period;
+
+        -- Additional stimuli can be added here
+
+        wait;
+    end process;
+
+end behavior;

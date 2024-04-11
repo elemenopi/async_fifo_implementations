@@ -1,0 +1,14 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity nots is 
+    Port (
+        input : in std_logic_vector(3 downto 0);
+        output : out std_logic_vector(3 downto 0)
+    );
+end nots;
+
+architecture Behavioral of nots is
+begin
+    output <= not input;
+end Behavioral;

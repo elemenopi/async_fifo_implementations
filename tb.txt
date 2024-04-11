@@ -1,0 +1,44 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity stageOne_tb is
+end stageOne_tb;
+
+architecture Behavioral of stageOne_tb is
+    component stageOne
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal input_data : std_logic_vector(7 downto 0);
+    signal output_data : std_logic_vector(7 downto 0);
+
+begin
+
+    dut: stageOne port map (
+        Input => input_data,
+        Output => output_data
+    );
+
+    stimulus_process: process
+    begin
+        -- Test Case 1
+        input_data <= "10000000";
+        wait for 10 ns;
+        
+        -- Test Case 2
+        input_data <= "01010101";
+        wait for 10 ns;
+
+        -- Test Case 3
+        input_data <= "11111111";
+        wait for 10 ns;
+        
+        -- Add more test cases as needed
+        
+        wait;
+    end process stimulus_process;
+
+end Behavioral;

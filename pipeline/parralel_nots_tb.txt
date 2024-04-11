@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity nots_TB is
+end nots_TB;
+
+architecture tb_arch of nots_TB is
+    constant CLK_PERIOD : time := 10 ns; -- Clock period (10 ns)
+
+    -- Declare component for nots entity
+    component nots is
+        port (
+            input : in std_logic_vector(3 downto 0);
+            output : out std_logic_vector(3 downto 0)
+        );
+    end component;
+
+    signal input1: std_logic_vector(3 downto 0); -- Input signal
+    signal output1 : std_logic_vector(3 downto 0); -- Output signal
+begin
+    -- Instantiate the nots module
+    uut : nots
+        port map (
+            input => input1,
+            output => output1
+        );
+
+    -- Test stimulus
+    process
+    begin
+        input1 <= "1001"; -- Assign input
+        wait for 20 ns; -- Hold input
+        input1 <= "0101"; -- Assign input
+        wait for 50 ns; -- Hold input
+        input1 <= "1111"; -- Assign input
+        wait for 30 ns; -- Hold input
+        input1 <= "0000"; -- Assign input
+        wait; -- Wait forever
+    end process;
+
+end architecture tb_arch;

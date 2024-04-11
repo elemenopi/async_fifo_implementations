@@ -1,0 +1,82 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY write_pointer_tb IS
+END write_pointer_tb;
+
+ARCHITECTURE behavior OF write_pointer_tb IS 
+
+    -- Component Declaration for the Unit Under Test (UUT)
+    COMPONENT write_pointer
+    PORT(
+         wptr : OUT  STD_LOGIC_VECTOR(4 downto 0);
+         fifo_we : OUT  STD_LOGIC;
+         clk : IN  STD_LOGIC;
+         rst_n : IN  STD_LOGIC;
+         wr : IN  STD_LOGIC;
+         fifo_full : IN  STD_LOGIC
+        );
+    END COMPONENT;
+
+   --Inputs
+   signal clk : STD_LOGIC := '0';
+   signal rst_n : STD_LOGIC := '0';
+   signal wr : STD_LOGIC := '0';
+   signal fifo_full : STD_LOGIC := '0';
+
+    --Outputs
+   signal wptr : STD_LOGIC_VECTOR(4 downto 0);
+   signal fifo_we : STD_LOGIC;
+
+    -- Clock period definitions
+   constant clk_period : time := 50 ns;
+
+BEGIN
+
+    -- Instantiate the Unit Under Test (UUT)
+   dut: write_pointer PORT MAP (
+          wptr => wptr,
+          fifo_we => fifo_we,
+          clk => clk,
+          rst_n => rst_n,
+          wr => wr,
+          fifo_full => fifo_full
+        );
+
+    -- Clock process to generate the clock
+    clk_process: process
+    begin
+        for i in 1 to 10 loop  -- Simulate for 1000 clock cycles
+            clk <= not clk;
+            wait for clk_period / 2;
+        end loop;
+        wait;
+    end process clk_process;
+
+   -- Stimulus process
+   stim_proc: process
+   begin        
+        -- Reset
+        rst_n <= '0';
+        wait for 20 ns;
+        rst_n <= '1';
+
+        -- Stimulate write process
+        wr <= '1';
+        wait for clk_period;
+        wait for clk_period;
+        wait for clk_period;
+        rst_n <= '0';
+        wr <= '0';
+
+        -- Stimulate fifo_full condition
+        fifo_full <= '1';
+        wait for clk_period;
+        fifo_full <= '0';
+
+        -- Additional stimuli can be added here
+
+        wait;
+   end process;
+
+END behavior;

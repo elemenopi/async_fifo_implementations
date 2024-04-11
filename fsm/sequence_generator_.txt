@@ -1,0 +1,45 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity Sequence_Generator is
+    port (
+        clk : in std_logic;
+        rst : in std_logic;
+        output_sequence : out std_logic_vector(3 downto 0)
+    );
+end entity Sequence_Generator;
+
+architecture Behavioral of Sequence_Generator is
+    type state_type is (S0, S1, S2, S3);
+    signal current_state, next_state : state_type;
+begin
+    process (clk, rst)
+    begin
+        if rst = '1' then
+            current_state <= S0; -- Initial state
+        elsif rising_edge(clk) then
+            current_state <= next_state;
+        end if;
+    end process;
+
+    process (current_state)
+    begin
+        case current_state is
+            when S0 =>
+                next_state <= S1;
+                output_sequence <= "0000";
+            when S1 =>
+                next_state <= S2;
+                output_sequence <= "0101";
+            when S2 =>
+                next_state <= S3;
+                output_sequence <= "0110";
+            when S3 =>
+                next_state <= S0;
+                output_sequence <= "0100";
+            when others =>
+                next_state <= S0; -- Default state
+                output_sequence <= "0000"; -- Default output
+        end case;
+    end process;
+end architecture Behavioral;

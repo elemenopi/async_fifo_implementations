@@ -1,0 +1,72 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity pipeline is
+	Port(
+    	clk : in STD_LOGIC;
+        input : in std_logic_vector(3 downto 0);
+        output : out std_logic_vector(3 downto 0);
+    );
+end pipeline;
+
+architecture Behavioral of pipeline is
+	component ParallelInParallelOutRegister is
+    	Port (
+        clk : in STD_LOGIC;          -- Clock input
+        reset : in STD_LOGIC;        -- Reset input
+        enable : in STD_LOGIC;       -- Enable input
+        data_in : in STD_LOGIC_VECTOR(3 downto 0);    -- Data input
+        parallel_out : out STD_LOGIC_VECTOR(3 downto 0);  -- Parallel output
+    );
+    end component;
+    
+    component nots is
+        Port (
+        input : in std_logic_vector(3 downto 0);
+        output : out std_logic_vector(3 downto 0)
+    	);
+    end component;
+    signal reg1_out, reg2_in, reg2_out, reg3_in, reg3_out : std_logic_vector(3 downto 0);
+begin
+	reg1 : ParallelInParallelOutRegister
+        port map (
+            clk => clk,
+            reset => '0', -- No reset initially
+            enable => '1', -- Enable the register
+            data_in => input,
+            parallel_out => reg1_out
+        );
+
+    nots1 : nots
+        port map (
+            input => reg1_out,
+            output => reg2_in -- Connecting to the input of reg2
+        );
+
+    reg2 : ParallelInParallelOutRegister
+        port map (
+            clk => clk,
+            reset => '0', -- No reset initially
+            enable => '1', -- Enable the register
+            data_in => reg2_in, -- Corrected: Using reg2_in as input
+            parallel_out => reg2_out
+        );
+
+    nots2 : nots
+        port map (
+            input => reg2_out,
+            output => reg3_in -- Connecting to the input of reg3
+        );
+
+    reg3 : ParallelInParallelOutRegister
+        port map (
+            clk => clk,
+            reset => '0', -- No reset initially
+            enable => '1', -- Enable the register
+            data_in => reg3_in, -- Corrected: Using reg3_in as input
+            parallel_out => reg3_out
+        );
+
+    output <= reg3_out; -- Assigning reg3_out to the output port
+    
+	
+end Behavioral;
