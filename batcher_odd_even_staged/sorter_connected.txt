@@ -1,0 +1,98 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity fullDesign is
+    Port (
+        -- External input for the first stage
+        ExtInput : in std_logic_vector(7 downto 0);
+        -- External output for the last stage
+        ExtOutput : out std_logic_vector(7 downto 0);
+    );
+end fullDesign;
+
+architecture Behavioral of fullDesign is
+    -- Declare signals to connect the stages
+    signal intermediate1, intermediate2, intermediate3, intermediate4, intermediate5 : std_logic_vector(7 downto 0);
+
+    -- Declare the six stages as components
+    component stageOne
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+    component stageTwo
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+    component stageThree
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+    component stageFour
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+    component stageFive
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+    component stageSix
+        Port (
+            Input : in std_logic_vector(7 downto 0);
+            Output : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+begin
+    -- Connect the stages in a pipeline
+    Stage1 : stageOne
+        port map (
+            Input => ExtInput,
+            Output => intermediate1
+        );
+
+    Stage2 : stageTwo
+        port map (
+            Input => intermediate1,
+            Output => intermediate2
+        );
+
+    Stage3 : stageThree
+        port map (
+            Input => intermediate2,
+            Output => intermediate3
+        );
+
+    Stage4 : stageFour
+        port map (
+            Input => intermediate3,
+            Output => intermediate4
+        );
+
+    Stage5 : stageFive
+        port map (
+            Input => intermediate4,
+            Output => intermediate5
+        );
+
+    Stage6 : stageSix
+        port map (
+            Input => intermediate5,
+            Output => ExtOutput
+        );
+
+end Behavioral;

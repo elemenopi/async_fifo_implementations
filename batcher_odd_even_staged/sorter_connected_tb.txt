@@ -1,0 +1,57 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity test_fullDesign is
+end test_fullDesign;
+
+architecture testbench of test_fullDesign is
+    -- Declare signals for the test
+    signal testInput : std_logic_vector(7 downto 0) := (others => '0');  -- Test input signal
+    signal testOutput : std_logic_vector(7 downto 0);  -- Test output signal
+    
+    -- Instantiate the full design
+    component fullDesign
+        Port (
+            ExtInput : in std_logic_vector(7 downto 0);
+            ExtOutput : out std_logic_vector(7 downto 0);
+        );
+    end component;
+
+begin
+    -- Instantiate the fullDesign component
+    uut : fullDesign
+        port map (
+            ExtInput => testInput,
+            ExtOutput => testOutput
+        );
+
+    -- Test sequence
+    process
+    begin
+        -- Test case 1: All zeros (baseline)
+        testInput <= (others => '0');
+        wait for 10 ns;  -- Wait for 10 nanoseconds
+        
+        -- Test case 2: All ones
+        testInput <= (others => '1');
+        wait for 10 ns;
+        
+        -- Test case 3: Alternating bits (01010101)
+        testInput <= "01010101";
+        wait for 10 ns;
+
+        -- Test case 4: Alternating bits (10101010)
+        testInput <= "1010X010";
+        wait for 10 ns;
+
+        -- Test case 5: Specific pattern
+        testInput <= "11001100";
+        wait for 10 ns;
+        
+        -- End of test
+        wait;
+    end process;
+
+end testbench;
